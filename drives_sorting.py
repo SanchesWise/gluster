@@ -24,7 +24,7 @@ class Layout:
     def make_format(self):
         count = 0
         for path in self.disk_list:
-            subprocess.run(["sudo", "-S", "mkfs.xfs", path])
+            subprocess.run(["sudo", "-S", "mkfs.xfs", path], stderr=subprocess.DEVNULL)
             path_to_make = '/export/brick' + str(count).zfill(2) + '/tank01'
             count += 1
             if not os.access(path_to_make, os.F_OK):
@@ -33,7 +33,7 @@ class Layout:
                 os.chmod(path_to_make, 0o0777)
             else:
                 print("Directory", path_to_make, "already exist")
-            UUID = subprocess.run(["lsblk", path, "-o", "+UUID,SERIAL"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            UUID = subprocess.run(["lsblk", path, "-o", "+UUID,SERIAL"], stdout=subprocess.PIPE)
             UUID = UUID.stdout.decode('utf-8').split()
             result_line = 'UUID=' + str(UUID[16]) + '  /export/brick' + str(count).zfill(
                 2) + '  xfs defaults 0 0    #' + '  ' + str(UUID[9])
