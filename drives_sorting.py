@@ -10,22 +10,18 @@ class Layout:
         self.drives_count = 0
 
     def get_drive_list(self):
-        list_drives = subprocess.run(["blockdev", "--report"], stdout=subprocess.PIPE)
-        # os.system("sudo blockdev --report > log_blks.txt")
-        #file_name_in = 'log_blks.txt'
-        #file = open(file_name_in, mode='r', )
-        line = True
-        while line:
-            line = file.readline()
+        list_drives = subprocess.run(["sudo", "-S", "blockdev", "--report"], stdout=subprocess.PIPE)
+        print("Найденые устройстваЖ:\n")
+        print(list_drives.stdout)
+        list_drives = list_drives.stdout.decode('utf-8').split("\n")
+        #print(*list_drives, sep='\n')
+        for line in list_drives:
             line = line.split()
-            #print(line)
+            print(line)
             if line and line[4] == '0' and int(line[5]) > 14000509157370:
-                #print(line[6])
                 self.disk_list.append(line[6])
                 self.drives_count += 1
-        else:
-            print(*self.disk_list, sep='\n')
-        file.close()
+        print(*self.disk_list, sep='\n')
 
     def make_format(self):
         for path, count in self.disk_list, self.drives_count:
@@ -58,5 +54,8 @@ class Layout:
         file.close()
 
 
-get_drive_list()
+
+gluster = Layout()
+
+gluster.get_drive_list()
 
