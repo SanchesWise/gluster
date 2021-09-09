@@ -27,7 +27,7 @@ class Layout:
         count = 0
         for path in self.disk_list:
             print("formatting :", path)
-            subprocess.run(["mkfs.xfs", path], stderr=subprocess.DEVNULL)
+            subprocess.run(["mkfs.xfs", path, "-f"], stderr=subprocess.DEVNULL)
             path_to_make = '/export/brick' + str(count).zfill(2) + '/tank01'
             count += 1
             if not os.access(path_to_make, os.F_OK):
