@@ -28,14 +28,15 @@ class Layout:
         for path in self.disk_list:
             print("formatting :", path)
             subprocess.run(["mkfs.xfs", path, "-f"], stderr=subprocess.DEVNULL)
-            path_to_make = '/export/brick' + str(count).zfill(2) + '/tank01'
-            count += 1
+            path_to_make = '/export/brick' + str(count).zfill(2)
             if not os.access(path_to_make, os.F_OK):
                 print("Making directory", path_to_make)
-                os.mkdir(path_to_make)
-                os.chmod(path_to_make, 0o0777)
+                Path(path_to_make).mkdir(0o777, parents=True, exist_ok=True)
+
             else:
                 print("Directory", path_to_make, "already exist")
+            subprocess.run(["mount", path, path_to_make])  # stderr=subprocess.DEVNULL)
+            os.chmod(path_to_make, 0o777)
             UUID = subprocess.run(["lsblk", path, "-o", "+UUID,SERIAL"], stdout=subprocess.PIPE)
             UUID = UUID.stdout.decode('utf-8').split()
             result_line = 'UUID=' + str(UUID[16]) + '  /export/brick' + str(count).zfill(
@@ -45,7 +46,7 @@ class Layout:
             file_name = '/etc/fstab'
             with open(file_name, mode='a', encoding='utf8') as file:
                 file.write(result_line)
-            print(file.closed)
+            count += 1
 
 gluster = Layout()
 
