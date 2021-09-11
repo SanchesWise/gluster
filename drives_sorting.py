@@ -33,7 +33,6 @@ class Layout:
             if not os.access(path_to_make, os.F_OK):
                 print("Making directory", path_to_make)
                 Path(path_to_make).mkdir(0o777, parents=True, exist_ok=True)
-
             else:
                 print("Directory", path_to_make, "already exist")
             subprocess.run(["mount", path, path_to_make])  # stderr=subprocess.DEVNULL)
@@ -48,6 +47,15 @@ class Layout:
             with open(file_name, mode='a', encoding='utf8') as file:
                 file.write(result_line)
             count += 1
+            path_to_make = path_to_make + '/tank01'
+            if not os.access(path_to_make, os.F_OK):
+                print("Making directory", path_to_make)
+                Path(path_to_make).mkdir(0o777, parents=True, exist_ok=True)
+                os.chmod(path_to_make, 0o777)
+                os.chown(path_to_make, 65534, 65534)
+            else:
+                print("Directory", path_to_make, "already exist")
+
 
 gluster = Layout()
 
