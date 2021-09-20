@@ -11,19 +11,19 @@ class Layout:
         self.drives_count = 0
 
     def get_drive_list(self):
-        list_drives = subprocess.run(["lsblk", "-dbo", "+UUID"], stdout=subprocess.PIPE)
+        list_drives = subprocess.run(["lsblk", "-bo", "+UUID"], stdout=subprocess.PIPE)
         print("Found devices:\n")
         list_drives = list_drives.stdout.decode('utf-8').split("\n")
         print(*list_drives, sep='\n')
         list_drives.pop(0)
         for line in list_drives:
             line = line.split()
-            if line and int(line[3]) > 14000509157370:
+            if line and int(line[3]) > 429496729500 and int(line[3]) < 429496729650:
                 if len(line) > 7:
                     if line[6][:-2] == "/export/brick":
                         self.drives_count += 1
                 else:
-                    self.disk_list.append(line[0])
+                    self.disk_list.append(line[0][-4:])
         print("Found devices to use:\n")
         print(*self.disk_list, sep='\n')
         print('Bricks already existing', self.drives_count)
