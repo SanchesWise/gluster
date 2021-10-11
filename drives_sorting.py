@@ -34,7 +34,7 @@ class Layout:
         for path in self.disk_list:
             path = '/dev/' + path
             print("formatting :", path)
-            subprocess.run(["mkfs.xfs", path, "-f"], stderr=subprocess.DEVNULL)
+            subprocess.run(["mkfs.btrfs", path, "-f"], stderr=subprocess.DEVNULL)
             path_to_make = '/export/brick' + str(self.drives_count).zfill(2)
             if not os.access(path_to_make, os.F_OK):
                 print("Making directory", path_to_make)
