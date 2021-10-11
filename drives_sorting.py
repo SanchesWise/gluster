@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import time
 import subprocess
 from pathlib import Path
 
@@ -42,6 +43,7 @@ class Layout:
             else:
                 print("Directory", path_to_make, "already exist")
             subprocess.run(["mount", path, path_to_make])  # stderr=subprocess.DEVNULL)
+            time.sleep(1)
             os.chmod(path_to_make, 0o777)
             UUID = subprocess.run(["lsblk", path, "-o", "+UUID,SERIAL"], stdout=subprocess.PIPE)
             UUID = UUID.stdout.decode('utf-8').split()
