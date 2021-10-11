@@ -43,7 +43,7 @@ class Layout:
                 print("Directory", path_to_make, "already exist")
             subprocess.run(["mount", path, path_to_make])  # stderr=subprocess.DEVNULL)
             os.chmod(path_to_make, 0o777)
-            UUID = subprocess.run(["lsblk", path, "-o", "+UUID"], stdout=subprocess.PIPE)
+            UUID = subprocess.run(["lsblk", path, "-o", "+UUID,SERIAL"], stdout=subprocess.PIPE)
             UUID = UUID.stdout.decode('utf-8').split()
             result_line = 'UUID=' + str(UUID[16]) + '  /export/brick' + str(self.drives_count).zfill(
                 2) + '  btrfs defaults 0 0    #' + '  ' + str(UUID[9] + "\n")
